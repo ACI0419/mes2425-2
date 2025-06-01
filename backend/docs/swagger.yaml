@@ -622,7 +622,7 @@ definitions:
     - email
     - real_name
     type: object
-host: localhost:8080
+host: localhost:8082
 info:
   contact:
     email: support@swagger.io
