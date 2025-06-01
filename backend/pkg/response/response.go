@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/to404hanga/pkg404/gotools/choose"
 )
 
 // Response 统一响应结构
@@ -24,10 +25,10 @@ const (
 )
 
 // Success 成功响应
-func Success(c *gin.Context, data interface{}) {
+func Success(c *gin.Context, data interface{}, msg string) {
 	c.JSON(http.StatusOK, Response{
 		Code:    SuccessCode,
-		Message: "success",
+		Message: choose.IF(msg != "", msg, "请求成功"),
 		Data:    data,
 	})
 }
