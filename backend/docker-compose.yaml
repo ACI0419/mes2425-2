@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # MySQL数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: mes_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mes_system
+      MYSQL_USER: mes_user
+      MYSQL_PASSWORD: mes_password
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/conf:/etc/mysql/conf.d
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --sql_mode=STRICT_TRANS_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO
+    networks:
+      - mes_network
+
+  # Redis缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: mes_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - mes_network
+
+  # phpMyAdmin数据库管理工具（可选）
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: mes_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - mes_network
+
+  # Redis Commander管理工具（可选）
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: mes_redis_commander
+    restart: always
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - mes_network
+
+# 数据卷
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# 网络
+networks:
+  mes_network:
+    driver: bridge
