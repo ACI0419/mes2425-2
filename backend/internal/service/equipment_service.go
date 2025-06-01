@@ -583,3 +583,20 @@ func (s *EquipmentService) maintenanceRecordToResponse(record *models.Maintenanc
 
 	return response
 }
+
+// DeleteMaintenanceRecord 删除维护记录
+func (s *EquipmentService) DeleteMaintenanceRecord(id uint) error {
+	var maintenanceRecord models.MaintenanceRecord
+	if err := s.db.First(&maintenanceRecord, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("维护记录不存在")
+		}
+		return fmt.Errorf("获取维护记录失败: %v", err)
+	}
+
+	if err := s.db.Delete(&maintenanceRecord).Error; err != nil {
+		return fmt.Errorf("删除维护记录失败: %v", err)
+	}
+
+	return nil
+}

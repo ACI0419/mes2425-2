@@ -195,3 +195,74 @@ func (s *UserService) GetUserList(page, pageSize int, keyword string) ([]models.
 
 	return users, total, nil
 }
+
+// UpdateProfileRequest 更新用户信息请求结构
+type UpdateProfileRequest struct {
+	RealName string `json:"real_name" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Phone    string `json:"phone"`
+}
+
+// RefreshTokenRequest 刷新令牌请求结构
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
+// RefreshTokenResponse 刷新令牌响应结构
+type RefreshTokenResponse struct {
+	Token string `json:"token"`
+}
+
+// RefreshToken 刷新令牌
+func (s *UserService) RefreshToken(refreshToken string) (*RefreshTokenResponse, error) {
+	// 验证刷新令牌
+	claims, err := jwt.ParseToken(s.jwtConfig, refreshToken)
+	if err != nil {
+		return nil, errors.New("无效的刷新令牌")
+	}
+
+	// 检查用户是否仍然有效
+	var user models.User
+	err = s.db.Where("id = ? AND status = ?", claims.UserID, 1).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在或已被禁用")
+		}
+		return nil, err
+	}
+
+	// 生成新的访问令牌
+	newToken, err := jwt.GenerateToken(s.jwtConfig, user.ID, user.Username, user.Role)
+	if err != nil {
+		return nil, errors.New("生成新令牌失败")
+	}
+
+	return &RefreshTokenResponse{
+		Token: newToken,
+	}, nil
+}
+
+// UpdateProfile 更新用户信息
+func (s *UserService) UpdateProfile(userID uint, req *UpdateProfileRequest) error {
+	var user models.User
+	err := s.db.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return err
+	}
+
+	// 检查邮箱是否已被其他用户使用
+	var count int64
+	s.db.Model(&models.User{}).Where("email = ? AND id != ?", req.Email, userID).Count(&count)
+	if count > 0 {
+		return errors.New("邮箱已被其他用户使用")
+	}
+
+	// 更新用户信息
+	updateData := map[string]interface{}{
+		"real_name": req.RealName,
+		"email":     req.Email,
+		"phone":     req.Phone,
+	}
+
+	return s.db.Model(&user).Updates(updateData).Error
+}

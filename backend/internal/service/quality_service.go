@@ -494,3 +494,84 @@ func (s *QualityService) qualityInspectionToResponse(inspection *models.QualityI
 		CreatedAt:           inspection.CreatedAt,
 	}
 }
+
+// UpdateQualityInspection 更新质量检测记录
+func (s *QualityService) UpdateQualityInspection(id uint, req *QualityInspectionRequest) (*QualityInspectionResponse, error) {
+	var qualityInspection models.QualityInspection
+	if err := s.db.Preload("ProductionOrder").Preload("QualityStandard").Preload("Inspector").First(&qualityInspection, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("质量检测记录不存在")
+		}
+		return nil, fmt.Errorf("获取质量检测记录失败: %v", err)
+	}
+
+	// 验证生产工单是否存在
+	var productionOrder models.ProductionOrder
+	if err := s.db.First(&productionOrder, req.ProductionOrderID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("生产工单不存在")
+		}
+		return nil, fmt.Errorf("验证生产工单失败: %v", err)
+	}
+
+	// 验证质量标准是否存在
+	var qualityStandard models.QualityStandard
+	if err := s.db.First(&qualityStandard, req.QualityStandardID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("质量标准不存在")
+		}
+		return nil, fmt.Errorf("验证质量标准失败: %v", err)
+	}
+
+	// 验证检测员是否存在
+	var inspector models.User
+	if err := s.db.First(&inspector, req.InspectorID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("检测员不存在")
+		}
+		return nil, fmt.Errorf("验证检测员失败: %v", err)
+	}
+
+	// 验证检测结果
+	if req.Result != "pass" && req.Result != "fail" {
+		return nil, errors.New("检测结果必须是 pass 或 fail")
+	}
+
+	// 更新质量检测记录信息
+	qualityInspection.ProductionOrderID = req.ProductionOrderID
+	qualityInspection.QualityStandardID = req.QualityStandardID
+	qualityInspection.InspectorID = req.InspectorID
+	qualityInspection.ActualValue = req.ActualValue
+	qualityInspection.Result = req.Result
+	qualityInspection.Remark = req.Remark
+
+	// 更新检测时间（如果提供）
+	if req.InspectionTime != nil {
+		qualityInspection.InspectionTime = *req.InspectionTime
+	}
+
+	if err := s.db.Save(&qualityInspection).Error; err != nil {
+		return nil, fmt.Errorf("更新质量检测记录失败: %v", err)
+	}
+
+	return s.qualityInspectionToResponse(&qualityInspection, &productionOrder, &qualityStandard, &inspector), nil
+}
+
+// DeleteQualityInspection 删除质量检测记录
+func (s *QualityService) DeleteQualityInspection(id uint) error {
+	var qualityInspection models.QualityInspection
+	if err := s.db.First(&qualityInspection, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("质量检测记录不存在")
+		}
+		return fmt.Errorf("获取质量检测记录失败: %v", err)
+	}
+
+	if err := s.db.Delete(&qualityInspection).Error; err != nil {
+		return fmt.Errorf("删除质量检测记录失败: %v", err)
+	}
+
+	return nil
+}
+
+// ... existing code ...

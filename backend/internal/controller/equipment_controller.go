@@ -399,3 +399,30 @@ func (c *EquipmentController) GetUpcomingMaintenances(ctx *gin.Context) {
 
 	response.SuccessWithMessage(ctx, "获取即将到期的维护成功", maintenances)
 }
+
+// DeleteMaintenanceRecord 删除维护记录
+// @Summary 删除维护记录
+// @Description 删除指定ID的维护记录
+// @Tags 设备管理
+// @Accept json
+// @Produce json
+// @Param id path int true "维护记录ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Failure 404 {object} response.Response
+// @Router /api/equipment/maintenance/{id} [delete]
+func (c *EquipmentController) DeleteMaintenanceRecord(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, "无效的维护记录ID")
+		return
+	}
+
+	err = c.equipmentService.DeleteMaintenanceRecord(uint(id))
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(ctx, "删除维护记录成功", nil)
+}

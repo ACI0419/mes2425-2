@@ -397,3 +397,64 @@ func (c *QualityController) GetQualityStandardTypes(ctx *gin.Context) {
 
 	response.SuccessWithMessage(ctx, "获取质量标准类型成功", types)
 }
+
+// UpdateQualityInspection 更新质量检测
+// @Summary 更新质量检测
+// @Description 更新指定ID的质量检测信息
+// @Tags 质量管理
+// @Accept json
+// @Produce json
+// @Param id path int true "质量检测ID"
+// @Param inspection body service.QualityInspectionRequest true "质量检测信息"
+// @Success 200 {object} response.Response{data=service.QualityInspectionResponse}
+// @Failure 400 {object} response.Response
+// @Failure 404 {object} response.Response
+// @Router /api/quality/inspections/{id} [put]
+func (c *QualityController) UpdateQualityInspection(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, "无效的质量检测ID")
+		return
+	}
+
+	var req service.QualityInspectionRequest
+	if err = ctx.ShouldBindJSON(&req); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "参数错误: "+err.Error())
+		return
+	}
+
+	inspection, err := c.qualityService.UpdateQualityInspection(uint(id), &req)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(ctx, "更新质量检测成功", inspection)
+}
+
+// DeleteQualityInspection 删除质量检测
+// @Summary 删除质量检测
+// @Description 删除指定ID的质量检测
+// @Tags 质量管理
+// @Accept json
+// @Produce json
+// @Param id path int true "质量检测ID"
+// @Success 200 {object} response.Response
+// @Failure 400 {object} response.Response
+// @Failure 404 {object} response.Response
+// @Router /api/quality/inspections/{id} [delete]
+func (c *QualityController) DeleteQualityInspection(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, "无效的质量检测ID")
+		return
+	}
+
+	err = c.qualityService.DeleteQualityInspection(uint(id))
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(ctx, "删除质量检测成功", nil)
+}

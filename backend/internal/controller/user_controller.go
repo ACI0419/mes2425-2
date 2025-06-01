@@ -120,3 +120,43 @@ func (ctrl *UserController) GetUserList(c *gin.Context) {
 		"page_size": pageSize,
 	})
 }
+
+// UpdateProfile 更新用户信息
+func (ctrl *UserController) UpdateProfile(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		response.Unauthorized(c, "用户未登录")
+		return
+	}
+
+	var req service.UpdateProfileRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误: "+err.Error())
+		return
+	}
+
+	err := ctrl.userService.UpdateProfile(userID.(uint), &req)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(c, "更新用户信息成功", nil)
+}
+
+// RefreshToken 刷新令牌
+func (ctrl *UserController) RefreshToken(c *gin.Context) {
+	var req service.RefreshTokenRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误: "+err.Error())
+		return
+	}
+
+	tokenData, err := ctrl.userService.RefreshToken(req.RefreshToken)
+	if err != nil {
+		response.Unauthorized(c, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(c, "刷新令牌成功", tokenData)
+}
