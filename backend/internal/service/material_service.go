@@ -335,7 +335,7 @@ func (s *MaterialService) GetLowStockMaterials() ([]MaterialResponse, error) {
 // GetMaterialTypes 获取所有物料类型
 func (s *MaterialService) GetMaterialTypes() ([]string, error) {
 	var types []string
-	if err := s.db.Model(&models.Material{}).Distinct("type").Pluck("type", &types).Error; err != nil {
+	if err := s.db.Model(&models.Material{}).Distinct("type").Where("type != ''").Pluck("type", &types).Error; err != nil {
 		return nil, fmt.Errorf("获取物料类型失败: %v", err)
 	}
 	return types, nil
@@ -358,13 +358,13 @@ func (s *MaterialService) materialToResponse(material *models.Material) *Materia
 		ID:           material.ID,
 		Code:         material.Code,
 		Name:         material.Name,
-		Type:         material.Type,
+		Type:         material.Type,        // 确保字段名一致
 		Unit:         material.Unit,
 		Price:        material.Price,
 		CurrentStock: material.CurrentStock,
 		MinStock:     material.MinStock,
 		MaxStock:     material.MaxStock,
-		Description:  material.Description,
+		Description:  material.Description, // 确保字段名一致
 		CreatedAt:    material.CreatedAt,
 		UpdatedAt:    material.UpdatedAt,
 	}
@@ -379,11 +379,11 @@ func (s *MaterialService) transactionToResponse(transaction *models.MaterialTran
 		MaterialName:      material.Name,
 		Type:              transaction.Type,
 		Quantity:          transaction.Quantity,
-		Price:             transaction.Price,
-		TotalAmount:       transaction.TotalAmount,
-		Supplier:          transaction.Supplier,
-		ProductionOrderID: transaction.ProductionOrderID,
-		Remark:            transaction.Remark,
+		Price:             transaction.Price,             // 现在模型中有这个字段
+		TotalAmount:       transaction.TotalAmount,       // 现在模型中有这个字段
+		Supplier:          transaction.Supplier,          // 现在模型中有这个字段
+		ProductionOrderID: transaction.ProductionOrderID, // 现在模型中有这个字段
+		Remark:            transaction.Remark,            // 现在模型中有这个字段
 		CreatedAt:         transaction.CreatedAt,
 	}
 }
