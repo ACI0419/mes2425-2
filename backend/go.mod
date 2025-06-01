@@ -3,6 +3,7 @@ module mes-system
 go 1.23.4
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/redis/go-redis/v9 v9.9.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.30.0
