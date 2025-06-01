@@ -131,7 +131,7 @@ func (c *EquipmentController) UpdateEquipment(ctx *gin.Context) {
 	}
 
 	var req service.EquipmentRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBindJSON(&req); err != nil {
 		response.Error(ctx, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}
@@ -300,7 +300,7 @@ func (c *EquipmentController) UpdateMaintenanceRecord(ctx *gin.Context) {
 	}
 
 	var req service.MaintenanceRecordRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBindJSON(&req); err != nil {
 		response.Error(ctx, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}

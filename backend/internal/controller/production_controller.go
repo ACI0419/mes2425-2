@@ -94,7 +94,7 @@ func (ctrl *ProductionController) UpdateProductionOrder(c *gin.Context) {
 	}
 
 	var req service.UpdateProductionOrderRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err = c.ShouldBindJSON(&req); err != nil {
 		response.BadRequest(c, "请求参数错误: "+err.Error())
 		return
 	}

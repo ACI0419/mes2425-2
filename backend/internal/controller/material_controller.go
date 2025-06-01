@@ -129,7 +129,7 @@ func (c *MaterialController) UpdateMaterial(ctx *gin.Context) {
 	}
 
 	var req service.MaterialRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBindJSON(&req); err != nil {
 		response.Error(ctx, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}

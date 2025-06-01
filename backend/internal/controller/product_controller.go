@@ -92,7 +92,7 @@ func (ctrl *ProductController) UpdateProduct(c *gin.Context) {
 	}
 
 	var req service.UpdateProductRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err = c.ShouldBindJSON(&req); err != nil {
 		response.BadRequest(c, "请求参数错误: "+err.Error())
 		return
 	}

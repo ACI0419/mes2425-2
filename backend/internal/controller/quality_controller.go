@@ -152,7 +152,7 @@ func (c *QualityController) UpdateQualityStandard(ctx *gin.Context) {
 	}
 
 	var req service.QualityStandardRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBindJSON(&req); err != nil {
 		response.Error(ctx, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}
