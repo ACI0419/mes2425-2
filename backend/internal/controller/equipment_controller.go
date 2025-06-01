@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"mes-system/internal/service"
 	"mes-system/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // EquipmentController 设备控制器
@@ -44,7 +45,7 @@ func (c *EquipmentController) CreateEquipment(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, equipment, "创建设备成功")
+	response.SuccessWithMessage(ctx, "创建设备成功", equipment)
 }
 
 // GetEquipment 获取设备详情
@@ -71,7 +72,7 @@ func (c *EquipmentController) GetEquipment(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, equipment, "获取设备详情成功")
+	response.SuccessWithMessage(ctx, "获取设备详情成功", equipment)
 }
 
 // GetEquipmentList 获取设备列表
@@ -141,7 +142,7 @@ func (c *EquipmentController) UpdateEquipment(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, equipment, "更新设备成功")
+	response.SuccessWithMessage(ctx, "更新设备成功", equipment)
 }
 
 // DeleteEquipment 删除设备
@@ -167,7 +168,7 @@ func (c *EquipmentController) DeleteEquipment(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, nil, "删除设备成功")
+	response.SuccessWithMessage(ctx, "删除设备成功", nil)
 }
 
 // CreateMaintenanceRecord 创建维护记录
@@ -193,7 +194,7 @@ func (c *EquipmentController) CreateMaintenanceRecord(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, record, "创建维护记录成功")
+	response.SuccessWithMessage(ctx, "创建维护记录成功", record)
 }
 
 // GetMaintenanceRecord 获取维护记录详情
@@ -220,7 +221,7 @@ func (c *EquipmentController) GetMaintenanceRecord(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, record, "获取维护记录详情成功")
+	response.SuccessWithMessage(ctx, "获取维护记录详情成功", record)
 }
 
 // GetMaintenanceRecordList 获取维护记录列表
@@ -310,7 +311,7 @@ func (c *EquipmentController) UpdateMaintenanceRecord(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, record, "更新维护记录成功")
+	response.SuccessWithMessage(ctx, "更新维护记录成功", record)
 }
 
 // GetEquipmentStatistics 获取设备统计数据
@@ -328,7 +329,7 @@ func (c *EquipmentController) GetEquipmentStatistics(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, statistics, "获取设备统计数据成功")
+	response.SuccessWithMessage(ctx, "获取设备统计数据成功", statistics)
 }
 
 // GetEquipmentTypes 获取设备类型
@@ -346,7 +347,7 @@ func (c *EquipmentController) GetEquipmentTypes(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, types, "获取设备类型成功")
+	response.SuccessWithMessage(ctx, "获取设备类型成功", types)
 }
 
 // GetMaintenanceTypes 获取维护类型
@@ -359,7 +360,7 @@ func (c *EquipmentController) GetEquipmentTypes(ctx *gin.Context) {
 // @Router /api/equipments/maintenance-types [get]
 func (c *EquipmentController) GetMaintenanceTypes(ctx *gin.Context) {
 	types := c.equipmentService.GetMaintenanceTypes()
-	response.Success(ctx, types, "获取维护类型成功")
+	response.SuccessWithMessage(ctx, "获取维护类型成功", types)
 }
 
 // GetEquipmentStatuses 获取设备状态
@@ -372,7 +373,7 @@ func (c *EquipmentController) GetMaintenanceTypes(ctx *gin.Context) {
 // @Router /api/equipments/statuses [get]
 func (c *EquipmentController) GetEquipmentStatuses(ctx *gin.Context) {
 	statuses := c.equipmentService.GetEquipmentStatuses()
-	response.Success(ctx, statuses, "获取设备状态成功")
+	response.SuccessWithMessage(ctx, "获取设备状态成功", statuses)
 }
 
 // GetUpcomingMaintenances 获取即将到期的维护
@@ -396,5 +397,5 @@ func (c *EquipmentController) GetUpcomingMaintenances(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, maintenances, "获取即将到期的维护成功")
+	response.SuccessWithMessage(ctx, "获取即将到期的维护成功", maintenances)
 }

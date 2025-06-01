@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"mes-system/internal/service"
 	"mes-system/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // MaterialController 物料控制器
@@ -44,7 +45,7 @@ func (c *MaterialController) CreateMaterial(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, material, "创建物料成功")
+	response.SuccessWithMessage(ctx, "创建物料成功", material)
 }
 
 // GetMaterial 获取物料详情
@@ -71,7 +72,7 @@ func (c *MaterialController) GetMaterial(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, material, "获取物料详情成功")
+	response.SuccessWithMessage(ctx, "获取物料详情成功", material)
 }
 
 // GetMaterialList 获取物料列表
@@ -139,7 +140,7 @@ func (c *MaterialController) UpdateMaterial(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, material, "更新物料成功")
+	response.SuccessWithMessage(ctx, "更新物料成功", material)
 }
 
 // DeleteMaterial 删除物料
@@ -165,7 +166,7 @@ func (c *MaterialController) DeleteMaterial(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, nil, "删除物料成功")
+	response.SuccessWithMessage(ctx, "删除物料成功", nil)
 }
 
 // CreateTransaction 创建物料交易
@@ -191,7 +192,7 @@ func (c *MaterialController) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, transaction, "创建交易记录成功")
+	response.SuccessWithMessage(ctx, "创建交易记录成功", transaction)
 }
 
 // GetTransactionList 获取物料交易列表
@@ -253,7 +254,7 @@ func (c *MaterialController) GetLowStockMaterials(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, materials, "获取低库存物料成功")
+	response.SuccessWithMessage(ctx, "获取低库存物料成功", materials)
 }
 
 // GetMaterialTypes 获取物料类型
@@ -271,5 +272,5 @@ func (c *MaterialController) GetMaterialTypes(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, types, "获取物料类型成功")
+	response.SuccessWithMessage(ctx, "获取物料类型成功", types)
 }

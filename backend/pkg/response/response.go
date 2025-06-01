@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/to404hanga/pkg404/gotools/choose"
 )
 
 // Response 统一响应结构
@@ -25,10 +24,10 @@ const (
 )
 
 // Success 成功响应
-func Success(c *gin.Context, data interface{}, msg ...string) {
+func Success(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, Response{
 		Code:    SuccessCode,
-		Message: choose.IF(msg[0] != "", msg[0], "请求成功"),
+		Message: "success",
 		Data:    data,
 	})
 }
@@ -73,4 +72,34 @@ func NotFound(c *gin.Context, message string) {
 // InternalError 内部错误
 func InternalError(c *gin.Context, message string) {
 	Error(c, InternalErrorCode, message)
+}
+
+// PageResponse 分页响应结构
+type PageResponse struct {
+	Code     int         `json:"code"`
+	Message  string      `json:"message"`
+	Data     interface{} `json:"data"`
+	Total    int64       `json:"total"`
+	Page     int         `json:"page"`
+	PageSize int         `json:"pageSize"`
+	Pages    int         `json:"pages"`
+}
+
+// SuccessWithPage 带分页的成功响应
+func SuccessWithPage(c *gin.Context, data interface{}, total int64, page, pageSize int, message string) {
+	// 计算总页数
+	pages := int((total + int64(pageSize) - 1) / int64(pageSize))
+	if pages == 0 {
+		pages = 1
+	}
+
+	c.JSON(http.StatusOK, PageResponse{
+		Code:     SuccessCode,
+		Message:  message,
+		Data:     data,
+		Total:    total,
+		Page:     page,
+		PageSize: pageSize,
+		Pages:    pages,
+	})
 }

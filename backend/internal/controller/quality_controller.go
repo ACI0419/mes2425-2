@@ -5,9 +5,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"mes-system/internal/service"
 	"mes-system/pkg/response"
+
+	"github.com/gin-gonic/gin"
 )
 
 // QualityController 质量控制器
@@ -45,7 +46,7 @@ func (c *QualityController) CreateQualityStandard(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, standard, "创建质量标准成功")
+	response.SuccessWithMessage(ctx, "创建质量标准成功", standard)
 }
 
 // GetQualityStandard 获取质量标准详情
@@ -72,7 +73,7 @@ func (c *QualityController) GetQualityStandard(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, standard, "获取质量标准详情成功")
+	response.SuccessWithMessage(ctx, "获取质量标准详情成功", standard)
 }
 
 // GetQualityStandardList 获取质量标准列表
@@ -162,7 +163,7 @@ func (c *QualityController) UpdateQualityStandard(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, standard, "更新质量标准成功")
+	response.SuccessWithMessage(ctx, "更新质量标准成功", standard)
 }
 
 // DeleteQualityStandard 删除质量标准
@@ -188,7 +189,7 @@ func (c *QualityController) DeleteQualityStandard(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, nil, "删除质量标准成功")
+	response.SuccessWithMessage(ctx, "删除质量标准成功", nil)
 }
 
 // CreateQualityInspection 创建质量检测记录
@@ -214,7 +215,7 @@ func (c *QualityController) CreateQualityInspection(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, inspection, "创建质量检测记录成功")
+	response.SuccessWithMessage(ctx, "创建质量检测记录成功", inspection)
 }
 
 // GetQualityInspection 获取质量检测记录详情
@@ -241,7 +242,7 @@ func (c *QualityController) GetQualityInspection(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, inspection, "获取质量检测记录详情成功")
+	response.SuccessWithMessage(ctx, "获取质量检测记录详情成功", inspection)
 }
 
 // GetQualityInspectionList 获取质量检测记录列表
@@ -376,7 +377,7 @@ func (c *QualityController) GetQualityStatistics(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, statistics, "获取质量统计数据成功")
+	response.SuccessWithMessage(ctx, "获取质量统计数据成功", statistics)
 }
 
 // GetQualityStandardTypes 获取质量标准类型
@@ -394,5 +395,5 @@ func (c *QualityController) GetQualityStandardTypes(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, types, "获取质量标准类型成功")
+	response.SuccessWithMessage(ctx, "获取质量标准类型成功", types)
 }
