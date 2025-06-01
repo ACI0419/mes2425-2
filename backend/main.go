@@ -8,8 +8,33 @@ import (
 	"mes-system/pkg/jwt"
 	"mes-system/routes"
 
+	// 修正Swagger导入路径
+	_ "mes-system/docs"
+
 	"github.com/gin-gonic/gin"
+	files "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title MES制造执行系统 API
+// @version 1.0
+// @description MES制造执行系统的RESTful API文档，包含用户管理、生产管理、产品管理、物料管理、质量管理和设备管理等模块。
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type \"Bearer\" followed by a space and JWT token.
 
 // main 主程序入口
 func main() {
@@ -33,7 +58,6 @@ func main() {
 
 	// 初始化控制器层
 	userController := controller.NewUserController(userService)
-	// 修复：ProductionController 需要两个服务参数
 	productionController := controller.NewProductionController(productionService, productService)
 	productController := controller.NewProductController(productService)
 	materialController := controller.NewMaterialController(materialService)
@@ -50,39 +74,31 @@ func main() {
 		Equipment:  equipmentController,
 	}
 
-	// 初始化Gin引擎
-	gin.SetMode(gin.ReleaseMode) // 生产模式
-	r := gin.New()
+	// 创建Gin引擎
+	r := gin.Default()
 
-	// 添加中间件
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
-	r.Use(corsMiddleware()) // CORS中间件
+	// 添加CORS中间件
+	r.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
+
+	// 添加Swagger路由
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(files.Handler)) // 修改这里：使用 files.Handler
 
 	// 设置路由
 	routes.SetupRoutes(r, controllers, jwtConfig)
 
 	// 启动服务器
-	log.Println("MES System Server starting on :8080")
+	log.Println("Server starting on :8080")
+	log.Println("Swagger UI available at: http://localhost:8080/swagger/index.html")
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
-	}
-}
-
-// corsMiddleware CORS中间件
-func corsMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-		c.Header("Access-Control-Expose-Headers", "Content-Length")
-		c.Header("Access-Control-Allow-Credentials", "true")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
 	}
 }
