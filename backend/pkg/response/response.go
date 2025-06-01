@@ -25,10 +25,10 @@ const (
 )
 
 // Success 成功响应
-func Success(c *gin.Context, data interface{}, msg string) {
+func Success(c *gin.Context, data interface{}, msg ...string) {
 	c.JSON(http.StatusOK, Response{
 		Code:    SuccessCode,
-		Message: choose.IF(msg != "", msg, "请求成功"),
+		Message: choose.IF(msg[0] != "", msg[0], "请求成功"),
 		Data:    data,
 	})
 }
