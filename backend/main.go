@@ -28,7 +28,7 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// @host localhost:8082
 // @BasePath /api/v1
 
 // @securityDefinitions.apikey BearerAuth
@@ -96,9 +96,9 @@ func main() {
 	routes.SetupRoutes(r, controllers, jwtConfig)
 
 	// 启动服务器
-	log.Println("Server starting on :8080")
-	log.Println("Swagger UI available at: http://localhost:8080/swagger/index.html")
-	if err := r.Run(":8080"); err != nil {
+	log.Println("Server starting on :8082")
+	log.Println("Swagger UI available at: http://localhost:8082/swagger/index.html")
+	if err := r.Run(":8082"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
