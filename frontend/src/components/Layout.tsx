@@ -61,7 +61,6 @@ const Layout: React.FC = () => {
       label: '质量管理',
       onClick: () => navigate('/quality'),
     },
-    // 更新菜单项配置
     {
       key: 'equipment',
       icon: <ToolOutlined />,
@@ -70,10 +69,12 @@ const Layout: React.FC = () => {
         {
           key: '/equipment',
           label: '设备列表',
+          onClick: () => navigate('/equipment'),
         },
         {
           key: '/equipment/maintenance',
           label: '维护记录',
+          onClick: () => navigate('/equipment/maintenance'),
         },
       ],
     },

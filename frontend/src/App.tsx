@@ -13,9 +13,6 @@ import MaterialList from './pages/Material/MaterialList';
 import QualityInspectionList from './pages/Quality/QualityInspectionList';
 import MaintenanceRecordList from './pages/Equipment/MaintenanceRecordList';
 
-// 在路由配置中添加
-<Route path="/equipment/maintenance" element={<MaintenanceRecordList />} />
-
 function App() {
   return (
     <Provider store={store}>
@@ -27,11 +24,10 @@ function App() {
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="equipment" element={<EquipmentList />} />
-              {/* 其他路由... */}
-              // 在路由配置中添加：
-              <Route path="/production" element={<ProductionOrderList />} />
-              <Route path="/material" element={<MaterialList />} />
-              <Route path="/quality" element={<QualityInspectionList />} />
+              <Route path="equipment/maintenance" element={<MaintenanceRecordList />} />
+              <Route path="production" element={<ProductionOrderList />} />
+              <Route path="material" element={<MaterialList />} />
+              <Route path="quality" element={<QualityInspectionList />} />
             </Route>
           </Routes>
         </Router>
