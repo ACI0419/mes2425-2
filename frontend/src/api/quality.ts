@@ -94,10 +94,21 @@ export const getQualityStandards = (params?: any) =>
 export const createQualityStandard = (data: QualityStandardRequest) =>
   apiClient.post<ApiResponse<QualityStandardResponse>>('/api/quality/standards', data);
 
+export interface QualityInspectionQueryParams {
+  page?: number;
+  page_size?: number;
+  result?: string;
+  product_id?: number;
+  inspector_id?: number;
+  batch_no?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
 /**
  * 获取质量检测记录列表
  */
-export const getQualityInspections = (params?: any) =>
+export const getQualityInspections = (params?: QualityInspectionQueryParams) =>
   apiClient.get<ApiResponse<PageResponse<QualityInspectionResponse>>>('/api/quality/inspections', { params });
 
 /**

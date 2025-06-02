@@ -6,6 +6,8 @@ import {
   DashboardOutlined,
   ToolOutlined,
   ShoppingCartOutlined,
+  InboxOutlined,
+  SafetyCertificateOutlined,
   UserOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
@@ -42,16 +44,38 @@ const Layout: React.FC = () => {
       onClick: () => navigate('/dashboard'),
     },
     {
-      key: '/equipment',
-      icon: <ToolOutlined />,
-      label: '设备管理',
-      onClick: () => navigate('/equipment'),
-    },
-    {
       key: '/production',
       icon: <ShoppingCartOutlined />,
       label: '生产管理',
       onClick: () => navigate('/production'),
+    },
+    {
+      key: '/material',
+      icon: <InboxOutlined />,
+      label: '物料管理',
+      onClick: () => navigate('/material'),
+    },
+    {
+      key: '/quality',
+      icon: <SafetyCertificateOutlined />,
+      label: '质量管理',
+      onClick: () => navigate('/quality'),
+    },
+    // 更新菜单项配置
+    {
+      key: 'equipment',
+      icon: <ToolOutlined />,
+      label: '设备管理',
+      children: [
+        {
+          key: '/equipment',
+          label: '设备列表',
+        },
+        {
+          key: '/equipment/maintenance',
+          label: '维护记录',
+        },
+      ],
     },
   ];
 

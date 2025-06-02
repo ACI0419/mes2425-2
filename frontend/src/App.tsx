@@ -8,6 +8,14 @@ import Layout from './components/Layout';
 import Login from './pages/Auth/Login';
 import Dashboard from './pages/Dashboard';
 import EquipmentList from './pages/Equipment/EquipmentList';
+import ProductionOrderList from './pages/Production/ProductionOrderList';
+import MaterialList from './pages/Material/MaterialList';
+import QualityInspectionList from './pages/Quality/QualityInspectionList';
+// 添加维护记录页面的导入和路由
+import MaintenanceRecordList from './pages/Equipment/MaintenanceRecordList';
+
+// 在路由配置中添加
+<Route path="/equipment/maintenance" element={<MaintenanceRecordList />} />
 
 function App() {
   return (
@@ -21,6 +29,10 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="equipment" element={<EquipmentList />} />
               {/* 其他路由... */}
+              // 在路由配置中添加：
+              <Route path="/production" element={<ProductionOrderList />} />
+              <Route path="/material" element={<MaterialList />} />
+              <Route path="/quality" element={<QualityInspectionList />} />
             </Route>
           </Routes>
         </Router>

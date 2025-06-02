@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Space, Input, Select, Modal, Form, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Space, Input, Select, Modal, Form, message, Popconfirm } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, ToolOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import type { Equipment } from '../../types';
 import { getEquipments, createEquipment, updateEquipment, deleteEquipment } from '../../api/equipment';
 
 const { Search } = Input;
 const { Option } = Select;
 
+/**
+ * 设备列表组件
+ * 提供设备的查看、新增、编辑、删除和维护记录管理功能
+ */
 const EquipmentList: React.FC = () => {
+  const navigate = useNavigate();
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +30,9 @@ const EquipmentList: React.FC = () => {
     status: '',
   });
 
-  // 获取设备列表
+  /**
+   * 获取设备列表数据
+   */
   const fetchEquipments = async () => {
     setLoading(true);
     try {
@@ -91,51 +99,66 @@ const EquipmentList: React.FC = () => {
       key: 'action',
       render: (_: any, record: Equipment) => (
         <Space size="middle">
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
             编辑
           </Button>
-          <Button 
-            type="link" 
-            danger 
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
+          <Button
+            type="link"
+            icon={<ToolOutlined />}
+            onClick={() => {
+              // 使用 React Router 进行页面跳转
+              navigate(`/equipment/maintenance?equipment_id=${record.id}`);
+            }}
           >
-            删除
+            维护记录
           </Button>
+          <Popconfirm
+            title="确定要删除这个设备吗？"
+            onConfirm={() => handleDelete(record.id)}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button type="link" danger icon={<DeleteOutlined />}>
+              删除
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  // 处理编辑
+  /**
+   * 处理编辑设备
+   * @param equipment 要编辑的设备信息
+   */
   const handleEdit = (equipment: Equipment) => {
     setEditingEquipment(equipment);
     form.setFieldsValue(equipment);
     setModalVisible(true);
   };
 
-  // 处理删除
-  const handleDelete = (id: number) => {
-    Modal.confirm({
-      title: '确认删除',
-      content: '确定要删除这个设备吗？',
-      onOk: async () => {
-        try {
-          await deleteEquipment(id);
-          message.success('删除成功');
-          fetchEquipments();
-        } catch (error) {
-          message.error('删除失败');
-        }
-      },
-    });
+  /**
+   * 处理删除设备
+   * @param id 设备ID
+   */
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteEquipment(id);
+      message.success('删除成功');
+      fetchEquipments();
+    } catch (error) {
+      message.error('删除失败');
+    }
   };
 
-  // 处理表单提交
+  /**
+   * 处理表单提交
+   * @param values 表单数据
+   */
   const handleSubmit = async (values: any) => {
     try {
       if (editingEquipment) {

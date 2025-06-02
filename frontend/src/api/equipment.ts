@@ -27,6 +27,59 @@ export interface EquipmentRequest {
 }
 
 /**
+ * 维护记录请求接口
+ */
+export interface MaintenanceRecordRequest {
+  equipment_id: number;
+  maintainer_id: number;
+  type: string; // preventive/corrective/emergency
+  description: string;
+  start_time: string;
+  end_time?: string;
+  cost?: number;
+  parts_replaced?: string;
+  result?: string;
+  next_maintenance?: string;
+  remark?: string;
+}
+
+/**
+ * 维护记录响应接口
+ */
+export interface MaintenanceRecordResponse {
+  id: number;
+  equipment_id: number;
+  equipment_code: string;
+  equipment_name: string;
+  maintainer_id: number;
+  maintainer_name: string;
+  type: string;
+  description: string;
+  start_time: string;
+  end_time?: string;
+  duration?: number; // 维护时长（分钟）
+  cost?: number;
+  parts_replaced?: string;
+  result?: string;
+  next_maintenance?: string;
+  remark?: string;
+  created_at: string;
+}
+
+/**
+ * 维护记录查询参数接口
+ */
+export interface MaintenanceRecordQueryParams {
+  page?: number;
+  page_size?: number;
+  equipment_id?: number;
+  type?: string;
+  maintainer_id?: number;
+  start_date?: string;
+  end_date?: string;
+}
+
+/**
  * 获取设备列表
  * @param params 查询参数
  */
@@ -69,34 +122,44 @@ export const getEquipmentStatistics = () =>
   apiClient.get<ApiResponse<any>>('/equipments/statistics');
 
 /**
- * 获取设备维护记录
- * @param equipmentId 设备ID
+ * 获取维护记录列表
  * @param params 查询参数
  */
-export const getMaintenanceRecords = (equipmentId: number, params?: any) => 
-  apiClient.get<ApiResponse<PageResponse<any>>>(`/equipments/${equipmentId}/maintenance`, { params });
+export const getMaintenanceRecords = (params?: MaintenanceRecordQueryParams) => 
+  apiClient.get<ApiResponse<PageResponse<MaintenanceRecordResponse>>>('/api/equipments/maintenance-records', { params });
 
 /**
- * 创建设备维护记录
- * @param equipmentId 设备ID
+ * 根据ID获取维护记录详情
+ * @param id 维护记录ID
+ */
+export const getMaintenanceRecordById = (id: number) => 
+  apiClient.get<ApiResponse<MaintenanceRecordResponse>>(`/api/equipments/maintenance-records/${id}`);
+
+/**
+ * 创建维护记录
  * @param data 维护记录数据
  */
-export const createMaintenanceRecord = (equipmentId: number, data: any) => 
-  apiClient.post<ApiResponse<any>>(`/equipments/${equipmentId}/maintenance`, data);
+export const createMaintenanceRecord = (data: MaintenanceRecordRequest) => 
+  apiClient.post<ApiResponse<MaintenanceRecordResponse>>('/api/equipments/maintenance-records', data);
 
 /**
- * 更新设备维护记录
- * @param equipmentId 设备ID
- * @param recordId 维护记录ID
+ * 更新维护记录
+ * @param id 维护记录ID
  * @param data 更新的维护记录数据
  */
-export const updateMaintenanceRecord = (equipmentId: number, recordId: number, data: any) => 
-  apiClient.put<ApiResponse<any>>(`/equipments/${equipmentId}/maintenance/${recordId}`, data);
+export const updateMaintenanceRecord = (id: number, data: Partial<MaintenanceRecordRequest>) => 
+  apiClient.put<ApiResponse<MaintenanceRecordResponse>>(`/api/equipments/maintenance-records/${id}`, data);
 
 /**
- * 删除设备维护记录
- * @param equipmentId 设备ID
- * @param recordId 维护记录ID
+ * 删除维护记录
+ * @param id 维护记录ID
  */
-export const deleteMaintenanceRecord = (equipmentId: number, recordId: number) => 
-  apiClient.delete<ApiResponse<void>>(`/equipments/${equipmentId}/maintenance/${recordId}`);
+export const deleteMaintenanceRecord = (id: number) => 
+  apiClient.delete<ApiResponse<void>>(`/api/equipments/maintenance-records/${id}`);
+
+/**
+ * 获取即将到期的维护记录
+ * @param days 天数
+ */
+export const getUpcomingMaintenance = (days: number = 7) => 
+  apiClient.get<ApiResponse<MaintenanceRecordResponse[]>>(`/api/equipments/maintenance/upcoming?days=${days}`);
