@@ -11,7 +11,6 @@ import EquipmentList from './pages/Equipment/EquipmentList';
 import ProductionOrderList from './pages/Production/ProductionOrderList';
 import MaterialList from './pages/Material/MaterialList';
 import QualityInspectionList from './pages/Quality/QualityInspectionList';
-// 添加维护记录页面的导入和路由
 import MaintenanceRecordList from './pages/Equipment/MaintenanceRecordList';
 
 // 在路由配置中添加
