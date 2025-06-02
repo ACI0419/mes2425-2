@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mes-minimal:
+    build: .
+    container_name: mes-minimal
+    ports:
+      - "80:80"  # 只暴露前端端口
+    volumes:
+      - mes_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mes_data:

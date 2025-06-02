@@ -23,10 +23,10 @@ type DatabaseConfig struct {
 // GetDefaultDatabaseConfig 获取默认数据库配置
 func GetDefaultDatabaseConfig() *DatabaseConfig {
 	return &DatabaseConfig{
-		Host:     "localhost",
+		Host:     "localhost", // 改为localhost
 		Port:     "3306",
-		User:     "root",
-		Password: "123456",
+		User:     "mes_user",
+		Password: "mes_password",
 		DBName:   "mes_system",
 		Charset:  "utf8mb4",
 	}
