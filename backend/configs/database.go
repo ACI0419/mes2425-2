@@ -24,7 +24,7 @@ type DatabaseConfig struct {
 func GetDefaultDatabaseConfig() *DatabaseConfig {
 	return &DatabaseConfig{
 		Host:     "localhost", // 改为localhost
-		Port:     "3306",
+		Port:     "3307",
 		User:     "mes_user",
 		Password: "mes_password",
 		DBName:   "mes_system",
