@@ -22,7 +22,7 @@ VALUES
 ('P003', '产品C', '这是产品C的描述', '套', 300.00, 1, NOW(), NOW());
 
 -- 插入示例物料数据
-INSERT INTO `materials` (`code`, `name`, `category`, `unit`, `price`, `min_stock`, `max_stock`, `current_stock`, `status`, `created_at`, `updated_at`) 
+INSERT INTO `materials` (`code`, `name`, `type`, `unit`, `price`, `min_stock`, `max_stock`, `current_stock`, `status`, `created_at`, `updated_at`) 
 VALUES 
 ('M001', '原料A', '原材料', 'kg', 10.00, 100, 1000, 500, 1, NOW(), NOW()),
 ('M002', '原料B', '原材料', 'kg', 15.00, 50, 500, 200, 1, NOW(), NOW()),
